@@ -11,7 +11,7 @@ class Emitter
 
     public function on($name, $event = null, $once = false)
     {
-        if (!$event) {
+        if ($event) {
             $this->events[$name][] = ['event' => $event, 'once' => $once];
         } else if (is_array($name)) {
             $this->events = array_merge($this->events, $name);
@@ -47,18 +47,16 @@ class Emitter
         $result = [];
         $param  = array_slice(func_get_args(), 1);
         foreach ($queue as $list) {
-            foreach ($list as $key => $row) {
-                $event = $row['event'];
-                $once  = $row['once'];
-                $catch = call_user_func_array($event, $param);
-                if ($once) {
-                    unset($this->events[$name][$key]);
-                }
-                if ($catch === false) {
-                    return $catch;
-                }
-                $result[] = $catch;
+            $event = $row['event'];
+            $once  = $row['once'];
+            $catch = call_user_func_array($event, $param);
+            if ($once) {
+                unset($this->events[$name][$key]);
             }
+            if ($catch === false) {
+                return $catch;
+            }
+            $result[] = $catch;
         }
         return $result;
     }
