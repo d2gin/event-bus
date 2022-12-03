@@ -46,7 +46,7 @@ class Emitter
         }
         $result = [];
         $param  = array_slice(func_get_args(), 1);
-        foreach ($queue as $list) {
+        foreach ($queue as $row) {
             $event = $row['event'];
             $once  = $row['once'];
             $catch = call_user_func_array($event, $param);
